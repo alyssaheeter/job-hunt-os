@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Untangling the Roots</title>
+<meta name="description" content="Turning a 329-person Ancestry export into a verified, people-first knowledge graph, and finding 30 ancestors the tree had silently lost.">
+<style>
+  :root { --bg:#faf8f4; --ink:#1f2a24; --muted:#5d6b63; --accent:#2f6f4e; --warn:#b4531f; --card:#fff; --line:#e3ded3; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#161b18; --ink:#e8ede9; --muted:#9aa89f; --accent:#6fc59a; --warn:#e0895a; --card:#1f2622; --line:#2f3832; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:17px/1.65 Georgia, "Times New Roman", serif; }
+  main { max-width:760px; margin:0 auto; padding:56px 22px 96px; }
+  h1 { font-size:2.6rem; line-height:1.15; margin:0 0 8px; }
+  h2 { font-size:1.45rem; margin:52px 0 12px; }
+  .sub { color:var(--muted); font-size:1.15rem; margin:0 0 28px; }
+  .pitch { border-left:4px solid var(--accent); padding:4px 0 4px 18px; font-size:1.12rem; }
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin:28px 0; }
+  .stat { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; }
+  .stat b { display:block; font-size:2rem; color:var(--accent); font-family:system-ui,sans-serif; }
+  .stat span { color:var(--muted); font:0.9rem system-ui,sans-serif; }
+  table { width:100%; border-collapse:collapse; font:0.95rem system-ui,sans-serif; background:var(--card); border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+  th,td { text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); }
+  th { color:var(--muted); font-weight:600; }
+  tr:last-child td { border-bottom:0; }
+  .bar { height:10px; border-radius:5px; background:var(--accent); }
+  .bar.warn { background:var(--warn); }
+  figure { margin:24px 0; background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px; }
+  figcaption { color:var(--muted); font:0.9rem system-ui,sans-serif; margin-top:8px; }
+  svg { width:100%; height:auto; display:block; }
+  svg text { font:12px system-ui,sans-serif; fill:var(--ink); }
+  .callout { background:var(--card); border:1px solid var(--warn); border-radius:10px; padding:14px 18px; }
+  code { font-family:ui-monospace,Consolas,monospace; background:var(--card); border:1px solid var(--line); border-radius:4px; padding:1px 5px; font-size:0.9em; }
+  ul { padding-left:1.2rem; }
+  footer { margin-top:56px; color:var(--muted); font:0.9rem system-ui,sans-serif; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Untangling the Roots</h1>
+  <p class="sub">Turning a 329-person Ancestry export into a verified, people-first knowledge graph.</p>
+  <p class="pitch">I built a validated graph from a raw family-tree export, then used scripts to find <strong>30 ancestors the tree had silently lost</strong>. My first diagnosis was wrong, and the data corrected it.</p>
+
+  <div class="stats">
+    <div class="stat"><b>329</b><span>people parsed</span></div>
+    <div class="stat"><b>100</b><span>family records</span></div>
+    <div class="stat"><b>139</b><span>sources</span></div>
+    <div class="stat"><b>30</b><span>hidden ancestors found</span></div>
+  </div>
+
+  <h2>The problem</h2>
+  <p>An Ancestry export is a flat file, not a research tool. Imported as-is, citations, places and events outnumbered people, so the graph showed hubs instead of a family. I wanted a graph with only people and kinship edges, every person labelled by relationship, and proof by script that the data could be trusted.</p>
+
+  <h2>The build</h2>
+  <table>
+    <tr><th>Layer</th><th>Choice</th><th>Why</th></tr>
+    <tr><td>Source of truth</td><td>GEDCOM 5.5.1</td><td>Portable and re-importable</td></tr>
+    <tr><td>Workspace</td><td>Obsidian + Charted Roots</td><td>One note per person, linked by frontmatter</td></tr>
+    <tr><td>Cleanup</td><td>Python with <code>--verify</code></td><td>Re-runnable, never hand-edited</td></tr>
+    <tr><td>Graph</td><td>People-only graph script</td><td>Kinship edges only, no hubs</td></tr>
+    <tr><td>Delivery</td><td>Two Firebase portals</td><td>One per family line</td></tr>
+  </table>
+
+  <h2>Labelling kinship</h2>
+  <table>
+    <tr><th>Value</th><th>Count</th><th style="width:40%"></th></tr>
+    <tr><td>collateral</td><td>144</td><td><div class="bar" style="width:100%"></div></td></tr>
+    <tr><td>ancestor</td><td>110</td><td><div class="bar" style="width:76%"></div></td></tr>
+    <tr><td><strong>unlinked</strong></td><td><strong>30</strong></td><td><div class="bar warn" style="width:21%"></div></td></tr>
+    <tr><td>by-marriage</td><td>19</td><td><div class="bar" style="width:13%"></div></td></tr>
+    <tr><td>in-law family</td><td>14</td><td><div class="bar" style="width:10%"></div></td></tr>
+    <tr><td>self</td><td>1</td><td><div class="bar" style="width:1%"></div></td></tr>
+  </table>
+
+  <h2>The bug: ancestors who "weren't related to anyone"</h2>
+  <p>Thirty people had no path to the root, in two tidy clusters of 13 and 17. My theory was a missing marriage joining each cluster to the main tree. I wrote a script to test it, and the result was the opposite:</p>
+  <ul>
+    <li><strong>The source file was fully connected: 329 of 329 people reached the root.</strong></li>
+    <li>Tracing paths showed both clusters were <strong>direct ancestors</strong>, five to six generations up.</li>
+    <li>Two people in the chain were <strong>duplicate records</strong>. Ancestry stored each twice, once with parents and once without, and my vault linked to the copy without parents.</li>
+  </ul>
+
+  <figure>
+    <svg viewBox="0 0 640 250" role="img" aria-label="Before and after diagram of duplicate records hiding ancestors">
+      <text x="20" y="20" font-weight="700">Before: linked to the copy with no parents</text>
+      <g stroke="currentColor" stroke-width="1.5" fill="none" style="color:var(--muted)">
+        <line x1="90" y1="55" x2="90" y2="95"/><line x1="90" y1="115" x2="90" y2="150"/>
+        <line x1="90" y1="150" x2="40" y2="190" stroke-dasharray="4"/>
+      </g>
+      <circle cx="90" cy="45" r="12" style="fill:var(--accent)"/><text x="110" y="49">root person</text>
+      <circle cx="90" cy="105" r="12" style="fill:var(--accent)"/><text x="110" y="109">parent</text>
+      <circle cx="90" cy="162" r="12" style="fill:var(--accent)"/><text x="110" y="166">great-grandparent, copy A (no parents)</text>
+      <circle cx="40" cy="200" r="12" style="fill:var(--warn)"/><text x="60" y="226">copy B holds the 30 ancestors, unreachable</text>
+
+      <text x="360" y="20" font-weight="700">After: duplicates merged</text>
+      <g stroke="currentColor" stroke-width="1.5" fill="none" style="color:var(--muted)">
+        <line x1="400" y1="55" x2="400" y2="95"/><line x1="400" y1="115" x2="400" y2="150"/><line x1="400" y1="172" x2="400" y2="205"/>
+      </g>
+      <circle cx="400" cy="45" r="12" style="fill:var(--accent)"/><text x="420" y="49">root person</text>
+      <circle cx="400" cy="105" r="12" style="fill:var(--accent)"/><text x="420" y="109">parent</text>
+      <circle cx="400" cy="162" r="12" style="fill:var(--accent)"/><text x="420" y="166">great-grandparent (merged)</text>
+      <circle cx="400" cy="215" r="12" style="fill:var(--accent)"/><text x="420" y="219">13 + 17 ancestors reconnected</text>
+    </svg>
+    <figcaption>Illustrative diagram; no real names are shown.</figcaption>
+  </figure>
+
+  <p class="callout"><strong>The lesson:</strong> a tag like <code>unlinked</code> can be right about the database and wrong about the family. I only found that by checking against an independent source.</p>
+
+  <h2>Judgement calls I did not automate</h2>
+  <ul>
+    <li><strong>Candidate 1:</strong> same name, one-year birth gap. A strong match and a likely merge.</li>
+    <li><strong>Candidate 2:</strong> same name, a <strong>32-year</strong> birth gap. A real conflict, flagged for a record check rather than guessed.</li>
+  </ul>
+  <p>The script writes these to a review queue and never edits notes. Automation finds candidates, and a human decides.</p>
+
+  <h2>Results</h2>
+  <ul>
+    <li>329 people validated against 100 family records.</li>
+    <li>30 hidden ancestors diagnosed, with a root cause and merge plan.</li>
+    <li>A repeatable <code>--verify</code> pipeline that keeps the graph people-only.</li>
+    <li>Two family-facing web portals shipped.</li>
+  </ul>
+
+  <h2>Next</h2>
+  <ul>
+    <li>Apply the approved merges and re-tag; the 30 should become <code>ancestor</code>.</li>
+    <li>Add duplicate detection at import time.</li>
+    <li>Publish a synthetic demo dataset so the method can be shown without real family data.</li>
+  </ul>
+
+  <footer>Skills: data quality, graph modelling, Python tooling, hypothesis testing against ground truth, privacy-aware publishing, AI-assisted development with human review gates.<br>
+  </footer>
+</main>
+</body>
+</html>
