@@ -6,17 +6,18 @@ function createOutreachDraftForJob(jobId) {
   }
   var job = readRowByMap(jobSheet, jobRow);
 
-  var taskId = generateId_("task");
-  var task = {
-    task_id: taskId,
-    job_id: jobId,
-    task_type: "outreach",
-    status: "draft",
-    due_date: formatDate_(new Date()),
-    created_at: new Date(),
-    updated_at: new Date()
-  };
-  appendRowByMap(getSheetOrThrow_("TASKS"), task);
+  var taskSheet = getSheetOrThrow_("TASKS");
+  var taskRow = findLatestTaskRowForJob_(taskSheet, jobId, "outreach");
+  var taskId = "";
+  if (taskRow !== -1) {
+    var existingTask = readRowByMap(taskSheet, taskRow);
+    if (String(existingTask.status || "").toLowerCase() !== "done") {
+      taskId = existingTask.task_id;
+    }
+  }
+  if (!taskId) {
+    taskId = createTaskForJob_(taskSheet, jobId, "outreach", "draft", formatDate_(new Date()));
+  }
 
   var draft = aiDraftOutreach({
     company: job.company,
@@ -27,10 +28,18 @@ function createOutreachDraftForJob(jobId) {
     tone: getSetting("DEFAULT_EMAIL_TONE")
   });
 
-  var body = draft.body + "\n\n";
-  var htmlBody = draft.body + "<br><br>" + buildTrackingTokenHtmlComment_(jobId, taskId, "outreach");
+  var trackingToken = buildTrackingToken_(jobId, taskId, "outreach");
+  var body = draft.body + "\n\n" + trackingToken;
+  var htmlBody = escapeHtml_(draft.body).replace(/\n/g, "<br>") +
+    '<span style="display:none;color:transparent;font-size:1px">' + escapeHtml_(trackingToken) + "</span>";
   var recipient = job.contact_email || "";
-  var draftObj = GmailApp.createDraft(recipient || "", draft.subject || "", body, { htmlBody: htmlBody });
+  var draftId = job.outreach_draft_id || "";
+  var draftObj = null;
+  if (draftId) {
+    draftObj = GmailApp.getDraft(draftId).update(recipient || "", draft.subject || "", body, { htmlBody: htmlBody });
+  } else {
+    draftObj = GmailApp.createDraft(recipient || "", draft.subject || "", body, { htmlBody: htmlBody });
+  }
 
   updateTaskDraft_(taskId, draftObj.getId());
   logEvent("INFO", "draft_outreach", jobId, taskId, { draftId: draftObj.getId() });
@@ -60,8 +69,10 @@ function createFollowupDraftForTask(taskId) {
     tone: getSetting("DEFAULT_EMAIL_TONE")
   });
 
-  var body = draft.body + "\n\n";
-  var htmlBody = draft.body + "<br><br>" + buildTrackingTokenHtmlComment_(job.job_id, task.task_id, "followup");
+  var trackingToken = buildTrackingToken_(job.job_id, task.task_id, "followup");
+  var body = draft.body + "\n\n" + trackingToken;
+  var htmlBody = escapeHtml_(draft.body).replace(/\n/g, "<br>") +
+    '<span style="display:none;color:transparent;font-size:1px">' + escapeHtml_(trackingToken) + "</span>";
   var recipient = job.contact_email || "";
 
   var draftId = task.draft_id;
@@ -97,6 +108,15 @@ function buildTrackingToken_(jobId, taskId, action) {
 
 function buildTrackingTokenHtmlComment_(jobId, taskId, action) {
   return "<!-- " + buildTrackingToken_(jobId, taskId, action) + " -->";
+}
+
+function escapeHtml_(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 function ensureFollowupTaskForJob_(jobId) {
@@ -149,4 +169,20 @@ function findLatestTaskRowForJob_(taskSheet, jobId, taskType) {
     }
   }
   return -1;
+}
+
+function getTasksByFilters_(filters) {
+  var sheet = getSheetOrThrow_("TASKS");
+  var rows = readAllRowsByMap_(sheet, 500);
+  var status = filters && filters.status ? String(filters.status).toLowerCase() : "";
+  var jobId = filters && filters.job_id ? String(filters.job_id) : "";
+  return rows.filter(function(row) {
+    if (status && String(row.status || "").toLowerCase() !== status) {
+      return false;
+    }
+    if (jobId && String(row.job_id || "") !== jobId) {
+      return false;
+    }
+    return true;
+  });
 }

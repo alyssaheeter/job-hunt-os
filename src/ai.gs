@@ -41,6 +41,58 @@ function aiSummarizeJob(text) {
   return parsed;
 }
 
+function aiExtractJobFromUrl(url, htmlOrNull, optionalText) {
+  var optional = coerceString_(optionalText || "").trim();
+  if (!getBooleanSetting("AI_ENABLED", true)) {
+    return deterministicJobExtract_(optional);
+  }
+
+  var htmlText = htmlOrNull ? stripHtml_(htmlOrNull) : "";
+  var prompt = [
+    "You extract job details from a URL or provided text.",
+    "Return JSON with keys: company (string), role_title (string), job_description (string), source (string), confidence (number 0-100), needs_review (boolean).",
+    "If data is missing or ambiguous, set needs_review true and keep fields blank.",
+    "URL: " + (url || ""),
+    "JOB_TEXT:",
+    clipText_(optional || htmlText, 12000)
+  ].join("\n");
+
+  var response = callGemini_(prompt);
+  var parsed = response ? extractJson_(response) : null;
+  if (!parsed) {
+    return deterministicJobExtract_(optional);
+  }
+
+  return {
+    company: parsed.company || "",
+    role_title: parsed.role_title || "",
+    job_description: clipText_(parsed.job_description || optional || "", 20000),
+    source: parsed.source || "url",
+    confidence: Number(parsed.confidence || 0),
+    needs_review: !parsed.company || !parsed.role_title || Number(parsed.confidence || 0) < 70 ||
+      parsed.needs_review === true || String(parsed.needs_review || "").toLowerCase() === "true"
+  };
+}
+
+function deterministicJobExtract_(optionalText) {
+  return {
+    company: "",
+    role_title: "",
+    job_description: optionalText || "",
+    source: "manual",
+    confidence: 0,
+    needs_review: true
+  };
+}
+
+function clipText_(text, maxLength) {
+  var safeText = coerceString_(text || "");
+  if (safeText.length <= maxLength) {
+    return safeText;
+  }
+  return safeText.substring(0, maxLength);
+}
+
 function aiDraftOutreach(inputs) {
   if (!getBooleanSetting("AI_ENABLED", true)) {
     return deterministicOutreach_(inputs);

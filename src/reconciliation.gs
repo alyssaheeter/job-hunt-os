@@ -8,18 +8,18 @@ function reconcileSentMail() {
     var processedLabelName = settings.GMAIL_LABEL_PREFIX + "_PROCESSED";
     var processedLabel = GmailApp.getUserLabelByName(processedLabelName) || GmailApp.createLabel(processedLabelName);
 
-    var threads = GmailApp.search('in:sent newer_than:7d "[[JOBOS"');
+    var threads = GmailApp.search('in:sent newer_than:30d "JOBOS job_id"');
     var tasksSheet = getSheetOrThrow_("TASKS");
     var jobsSheet = getSheetOrThrow_("JOBS");
+    var processedMessageIds = getProcessedSentMessageIds_(tasksSheet);
 
     threads.forEach(function(thread) {
-      if (thread.getLabels().some(function(label) { return label.getName() === processedLabelName; })) {
-        return;
-      }
       var messages = thread.getMessages();
       messages.forEach(function(message) {
-        var body = message.getBody();
-        var tokens = parseTrackingToken_(body);
+        if (processedMessageIds[message.getId()]) return;
+        var body = message.getBody() || "";
+        var plainBody = message.getPlainBody() || "";
+        var tokens = parseTrackingToken_(body) || parseTrackingToken_(plainBody);
         if (!tokens || !tokens.job_id) {
           return;
         }
@@ -35,6 +35,7 @@ function reconcileSentMail() {
               sent_message_id: message.getId(),
               updated_at: new Date()
             });
+            processedMessageIds[message.getId()] = true;
           }
         }
 
@@ -56,6 +57,18 @@ function reconcileSentMail() {
   } finally {
     lock.releaseLock();
   }
+}
+
+function getProcessedSentMessageIds_(tasksSheet) {
+  var headerMap = getHeaderMap(tasksSheet);
+  var column = headerMap.sent_message_id;
+  var ids = {};
+  if (!column || tasksSheet.getLastRow() < 2) return ids;
+  var values = tasksSheet.getRange(2, column, tasksSheet.getLastRow() - 1, 1).getValues();
+  values.forEach(function(row) {
+    if (row[0]) ids[String(row[0])] = true;
+  });
+  return ids;
 }
 
 function parseTrackingToken_(body) {

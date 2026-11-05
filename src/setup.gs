@@ -9,7 +9,8 @@ function createMissingSheets() {
   var definitions = [
     { name: "SETTINGS", headers: ["KEY", "VALUE"] },
     { name: "JOBS", headers: [
-      "job_id", "url", "company", "role_title", "source", "status", "date_added", "job_description",
+      "job_id", "raw_url", "normalized_url", "url", "company", "role_title", "source", "status",
+      "needs_review", "fetch_status", "contact_email", "date_added", "job_description",
       "job_summary_json", "fit_score", "resume_doc_id", "cover_letter_doc_id", "outreach_draft_id",
       "last_contact_date", "next_follow_up_date", "lead_email_message_id", "dedupe_key",
       "ai_resume_used_facts_json", "ai_cover_used_facts_json",
@@ -73,7 +74,7 @@ function ensureDefaultSettings_() {
 }
 
 function installTriggers() {
-  var handlers = ["scanInboxForLeads", "scanInboxForSignals", "reconcileSentMail", "integrityCheck", "handleOnEdit"];
+  var handlers = ["scanInboxForLeads", "reconcileSentMail", "integrityCheck", "scanInboxForSignals", "handleOnEdit"];
   var existing = ScriptApp.getProjectTriggers();
   existing.forEach(function(trigger) {
     var handler = trigger.getHandlerFunction();
@@ -83,10 +84,10 @@ function installTriggers() {
   });
 
   ScriptApp.newTrigger("scanInboxForLeads").timeBased().everyMinutes(30).create();
-  ScriptApp.newTrigger("scanInboxForSignals").timeBased().everyMinutes(10).create();
   ScriptApp.newTrigger("reconcileSentMail").timeBased().everyMinutes(10).create();
   ScriptApp.newTrigger("integrityCheck").timeBased().atHour(2).everyDays(1).create();
   ScriptApp.newTrigger("handleOnEdit").forSpreadsheet(SpreadsheetApp.getActive()).onEdit().create();
+  ScriptApp.newTrigger("scanInboxForSignals").timeBased().everyMinutes(10).create();
 
   logEvent("INFO", "install_triggers", "", "", { handlers: handlers });
 }

@@ -7,6 +7,9 @@
     "@google/clasp": "^2.4.2"
   },
   "scripts": {
+    "build": "node scripts/build-sidebar.mjs",
+    "check": "npm run build && node --test test/*.test.mjs",
+    "prepush": "npm run build",
     "clasp:use:alyssa": "node scripts/clasp-use.mjs alyssa",
     "clasp:use:mom": "node scripts/clasp-use.mjs mom",
     "push": "clasp push",

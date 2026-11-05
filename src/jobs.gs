@@ -5,6 +5,7 @@ function ingestJobFromRow_(rowIndex) {
     throw new Error("Job URL is required.");
   }
   var updates = {};
+  var normalizedUrl = normalizeJobUrl_(row.url);
   if (!row.job_id) {
     updates.job_id = generateId_("job");
   }
@@ -15,7 +16,14 @@ function ingestJobFromRow_(rowIndex) {
     updates.date_added = formatDate_(new Date());
   }
 
-  var dedupeKey = row.dedupe_key || (row.company + "|" + row.role_title + "|" + row.url);
+  if (!row.raw_url) {
+    updates.raw_url = row.url;
+  }
+  if (!row.normalized_url && normalizedUrl) {
+    updates.normalized_url = normalizedUrl;
+  }
+
+  var dedupeKey = row.dedupe_key || buildUrlDedupeKey_(normalizedUrl || row.url);
   updates.dedupe_key = dedupeKey;
 
   if (getBooleanSetting("AI_ENABLED", true) && row.job_description && row.job_summary_json !== undefined) {

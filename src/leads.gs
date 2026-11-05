@@ -15,28 +15,33 @@ function scanInboxForLeads() {
     var threads = label.getThreads();
     var urlRegex = /(https?:\/\/[^\s]+)/i;
     var leadsSheet = getSheetOrThrow_("LEADS");
-    var jobsSheet = getSheetOrThrow_("JOBS");
 
     threads.forEach(function(thread) {
       var messages = thread.getMessages();
       var processed = false;
       messages.forEach(function(message) {
         if (message.isUnread()) {
-          var body = message.getBody();
+          if (findRowById_(leadsSheet, "email_message_id", message.getId()) !== -1) {
+            message.markRead();
+            processed = true;
+            return;
+          }
+          var body = message.getBody() || "";
           var match = body.match(urlRegex);
           if (!match) {
             return;
           }
           var url = match[1];
-          var jobId = generateId_("job");
-          appendRowByMap(jobsSheet, {
-            job_id: jobId,
-            url: url,
-            status: "lead",
-            date_added: formatDate_(new Date()),
-            lead_email_message_id: message.getId(),
-            dedupe_key: url
-          });
+          var ingestResult = ingestJobFromUrl_(url, message.getPlainBody() || "", "lead_scan");
+          var jobId = ingestResult.job_id;
+          var jobsSheet = getSheetOrThrow_("JOBS");
+          var jobRow = findRowById_(jobsSheet, "job_id", jobId);
+          if (jobRow !== -1) {
+            updateRowByMap(jobsSheet, jobRow, {
+              status: "lead",
+              lead_email_message_id: message.getId()
+            });
+          }
           appendRowByMap(leadsSheet, {
             lead_id: generateId_("lead"),
             job_id: jobId,

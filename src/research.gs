@@ -79,8 +79,7 @@ function fetchSourceForBrief_(source) {
   try {
     var response = UrlFetchApp.fetch(url, {
       muteHttpExceptions: true,
-      followRedirects: true,
-      timeout: 10000
+      followRedirects: true
     });
     var code = response.getResponseCode();
     var content = response.getContentText() || "";

@@ -149,22 +149,25 @@ function extractUrl_(content) {
   return match ? match[0] : "";
 }
 
-function normalizeJobUrl_(url) {
-  if (!url) return "";
-  var cleaned = String(url).trim();
-  cleaned = cleaned.replace(/[).,>]+$/, "");
-  cleaned = cleaned.replace(/^<+/, "");
-  cleaned = cleaned.split("#")[0];
-  cleaned = cleaned.split("?")[0];
-  return cleaned;
-}
-
 function findOrCreateJobByUrl_(jobsSheet, normalizedUrl, originalUrl) {
   var rowIndex = findJobRowByDedupeKey_(jobsSheet, normalizedUrl);
   if (rowIndex !== -1) {
     var job = readRowByMap(jobsSheet, rowIndex);
+    var updates = {};
     if (!job.url) {
-      updateRowByMap(jobsSheet, rowIndex, { url: originalUrl || normalizedUrl });
+      updates.url = originalUrl || normalizedUrl;
+    }
+    if (!job.normalized_url) {
+      updates.normalized_url = normalizedUrl;
+    }
+    if (!job.raw_url && originalUrl) {
+      updates.raw_url = originalUrl;
+    }
+    if (!job.dedupe_key) {
+      updates.dedupe_key = buildUrlDedupeKey_(normalizedUrl);
+    }
+    if (Object.keys(updates).length) {
+      updateRowByMap(jobsSheet, rowIndex, updates);
     }
     return { jobId: job.job_id, confidence: 70 };
   }
@@ -172,29 +175,15 @@ function findOrCreateJobByUrl_(jobsSheet, normalizedUrl, originalUrl) {
   var jobId = generateId_("job");
   appendRowByMap(jobsSheet, {
     job_id: jobId,
+    raw_url: originalUrl || normalizedUrl,
+    normalized_url: normalizedUrl,
     url: originalUrl || normalizedUrl,
     status: "lead",
     date_added: formatDate_(new Date()),
-    dedupe_key: normalizedUrl
+    dedupe_key: buildUrlDedupeKey_(normalizedUrl)
   });
   logEvent("INFO", "inbox_signal_job_created", jobId, "", { url: originalUrl || normalizedUrl });
   return { jobId: jobId, confidence: 75 };
-}
-
-function findJobRowByDedupeKey_(sheet, dedupeKey) {
-  if (!dedupeKey) return -1;
-  var headerMap = getHeaderMap(sheet);
-  var col = headerMap.dedupe_key || headerMap.url;
-  if (!col || sheet.getLastRow() < 2) {
-    return -1;
-  }
-  var values = sheet.getRange(2, col, sheet.getLastRow() - 1, 1).getValues();
-  for (var i = 0; i < values.length; i++) {
-    if (String(values[i][0] || "") === dedupeKey) {
-      return i + 2;
-    }
-  }
-  return -1;
 }
 
 function classifyInteractionType_(message, hasUrl) {
