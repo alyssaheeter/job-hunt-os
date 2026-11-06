@@ -31,6 +31,7 @@ function ingestJobFromUrl_(url, optionalText, source) {
     }
     return {
       job_id: existing.job_id,
+      created: false,
       company: existing.company || "",
       role: existing.role_title || "",
       needs_review: isTruthy_(existing.needs_review),
@@ -80,6 +81,7 @@ function ingestJobFromUrl_(url, optionalText, source) {
   return {
     job_id: jobId,
     company: jobRecord.company,
+    created: true,
     role: jobRecord.role_title,
     needs_review: needsReview,
     message: needsReview ? "Job ingested, needs review." : "Job ingested."

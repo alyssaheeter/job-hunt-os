@@ -1,0 +1,14 @@
+{
+    "name": "@jhos/docx",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc"
+    },
+    "dependencies": {
+        "docxtemplater": "^3.55.7",
+        "pizzip": "^3.1.7"
+    }
+}

@@ -28,6 +28,11 @@ function include_(path) {
   return HtmlService.createHtmlOutputFromFile(path).getContent();
 }
 
+// google.script.run cannot transport Date values, including nested sheet cells.
+function sidebarResponse_(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
 function uiGetDashboardData() {
   var jobsSheet = getSheetOrThrow_("JOBS");
   var tasksSheet = getSheetOrThrow_("TASKS");
@@ -53,12 +58,12 @@ function uiGetDashboardData() {
     tasks_open: openTasks.length
   };
 
-  return {
+  return sidebarResponse_({
     kpis: kpis,
     priority_tasks: priorityTasks,
     needs_review: needsReview,
     recent_logs: logs.slice(-10).reverse()
-  };
+  });
 }
 
 function uiGetJobs(filters) {
@@ -66,7 +71,7 @@ function uiGetJobs(filters) {
   var rows = readAllRowsByMap_(sheet, 500);
   var text = filters && filters.text ? String(filters.text).toLowerCase() : "";
   var status = filters && filters.status ? String(filters.status).toLowerCase() : "";
-  return rows.filter(function(row) {
+  return sidebarResponse_(rows.filter(function(row) {
     if (status && String(row.status || "").toLowerCase() !== status) {
       return false;
     }
@@ -75,7 +80,7 @@ function uiGetJobs(filters) {
       return haystack.indexOf(text) !== -1;
     }
     return true;
-  });
+  }));
 }
 
 function uiGetJobDetail(jobId) {
@@ -89,7 +94,7 @@ function uiGetJobDetail(jobId) {
   var tasks = readAllRowsByMap_(tasksSheet, 500).filter(function(task) {
     return String(task.job_id) === String(jobId);
   });
-  return { job: job, tasks: tasks };
+  return sidebarResponse_({ job: job, tasks: tasks });
 }
 
 function uiUpdateJob(jobId, patch) {
@@ -152,7 +157,7 @@ function uiDraftFollowup(taskId) {
 }
 
 function uiGetTasks(filters) {
-  return getTasksByFilters_(filters);
+  return sidebarResponse_(getTasksByFilters_(filters));
 }
 
 function uiValidateSettings() {

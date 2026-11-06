@@ -11,12 +11,19 @@ function reconcileSentMail() {
     var threads = GmailApp.search('in:sent newer_than:30d "JOBOS job_id"');
     var tasksSheet = getSheetOrThrow_("TASKS");
     var jobsSheet = getSheetOrThrow_("JOBS");
-    var processedMessageIds = getProcessedSentMessageIds_(tasksSheet);
+    var interactionsSheet = getSheetOrThrow_("INTERACTIONS");
+    var processedMessageIds = getProcessedSentMessageIds_(tasksSheet, interactionsSheet);
+    var ownAddresses = GmailApp.getAliases().concat([Session.getEffectiveUser().getEmail()])
+      .map(function(address) { return address.toLowerCase(); });
 
     threads.forEach(function(thread) {
       var messages = thread.getMessages();
       messages.forEach(function(message) {
         if (processedMessageIds[message.getId()]) return;
+        var from = message.getFrom();
+        var addressMatch = from.match(/<([^>]+)>/);
+        var address = (addressMatch ? addressMatch[1] : from).trim().toLowerCase();
+        if (message.isDraft() || ownAddresses.indexOf(address) === -1) return;
         var body = message.getBody() || "";
         var plainBody = message.getPlainBody() || "";
         var tokens = parseTrackingToken_(body) || parseTrackingToken_(plainBody);
@@ -35,18 +42,28 @@ function reconcileSentMail() {
               sent_message_id: message.getId(),
               updated_at: new Date()
             });
-            processedMessageIds[message.getId()] = true;
           }
         }
 
         var jobRow = findRowById_(jobsSheet, "job_id", jobId);
+        var sentAt = message.getDate();
         if (jobRow !== -1) {
-          var followup = computeNextFollowupDate_(action);
-          updateRowByMap(jobsSheet, jobRow, {
-            last_contact_date: formatDate_(new Date()),
-            next_follow_up_date: followup ? formatDate_(followup) : ""
-          });
+          var job = readRowByMap(jobsSheet, jobRow);
+          if (!job.last_contact_date || new Date(job.last_contact_date).getTime() <= sentAt.getTime()) {
+            var followup = computeNextFollowupDate_(action, sentAt);
+            updateRowByMap(jobsSheet, jobRow, {
+              last_contact_date: formatDate_(sentAt),
+              next_follow_up_date: followup ? formatDate_(followup) : ""
+            });
+          }
         }
+
+        appendRowByMap(interactionsSheet, {
+          interaction_id: generateId_("interaction"), ts: sentAt,
+          direction: "outbound", message_id: message.getId(),
+          thread_id: thread.getId(), job_id: jobId, type: "reconciled_sent"
+        });
+        processedMessageIds[message.getId()] = true;
 
         logEvent("INFO", "reconciled_sent", jobId, taskId, { messageId: message.getId(), action: action });
       });
@@ -59,15 +76,25 @@ function reconcileSentMail() {
   }
 }
 
-function getProcessedSentMessageIds_(tasksSheet) {
+function getProcessedSentMessageIds_(tasksSheet, interactionsSheet) {
   var headerMap = getHeaderMap(tasksSheet);
   var column = headerMap.sent_message_id;
   var ids = {};
-  if (!column || tasksSheet.getLastRow() < 2) return ids;
-  var values = tasksSheet.getRange(2, column, tasksSheet.getLastRow() - 1, 1).getValues();
+  var values = column && tasksSheet.getLastRow() >= 2
+    ? tasksSheet.getRange(2, column, tasksSheet.getLastRow() - 1, 1).getValues() : [];
   values.forEach(function(row) {
     if (row[0]) ids[String(row[0])] = true;
   });
+  if (interactionsSheet && interactionsSheet.getLastRow() >= 2) {
+    var map = getHeaderMap(interactionsSheet);
+    var rows = interactionsSheet.getRange(2, 1, interactionsSheet.getLastRow() - 1,
+      interactionsSheet.getLastColumn()).getValues();
+    rows.forEach(function(row) {
+      if (row[map.type - 1] === "reconciled_sent" && row[map.message_id - 1]) {
+        ids[String(row[map.message_id - 1])] = true;
+      }
+    });
+  }
   return ids;
 }
 
@@ -87,8 +114,8 @@ function parseTrackingToken_(body) {
   return tokens;
 }
 
-function computeNextFollowupDate_(action) {
-  var now = new Date();
+function computeNextFollowupDate_(action, sentAt) {
+  var now = sentAt || new Date();
   var days = null;
   if (action === "outreach") {
     days = getNumberSetting("FOLLOW_UP_DAYS_1", 3);

@@ -1,0 +1,119 @@
+{
+    "template_id": "RESUME_V3_DATES_ONLY",
+    "placeholders": {
+        "PRO_SUMMARY": {
+            "type": "block",
+            "source": "canonical_profile.positioning.summary_sentence_pool",
+            "max_sentences": 3
+        },
+        "INDEPENDENT_CONSULTANCY_BULLET_1": {
+            "type": "bullet",
+            "role_key": "INDEPENDENT_CONSULTANCY",
+            "index": 0
+        },
+        "INDEPENDENT_CONSULTANCY_BULLET_2": {
+            "type": "bullet",
+            "role_key": "INDEPENDENT_CONSULTANCY",
+            "index": 1
+        },
+        "INDEPENDENT_CONSULTANCY_BULLET_3": {
+            "type": "bullet",
+            "role_key": "INDEPENDENT_CONSULTANCY",
+            "index": 2
+        },
+        "INDEPENDENT_CONSULTANCY_BULLET_4": {
+            "type": "bullet",
+            "role_key": "INDEPENDENT_CONSULTANCY",
+            "index": 3
+        },
+        "INDEPENDENT_CONSULTANCY_BULLET_5": {
+            "type": "bullet",
+            "role_key": "INDEPENDENT_CONSULTANCY",
+            "index": 4
+        },
+        "AHEAD_BULLET_1": {
+            "type": "bullet",
+            "role_key": "AHEAD",
+            "index": 0
+        },
+        "AHEAD_BULLET_2": {
+            "type": "bullet",
+            "role_key": "AHEAD",
+            "index": 1
+        },
+        "AHEAD_BULLET_3": {
+            "type": "bullet",
+            "role_key": "AHEAD",
+            "index": 2
+        },
+        "AHEAD_BULLET_4": {
+            "type": "bullet",
+            "role_key": "AHEAD",
+            "index": 3
+        },
+        "AHEAD_BULLET_5": {
+            "type": "bullet",
+            "role_key": "AHEAD",
+            "index": 4
+        },
+        "ATT_CSE_BULLET_1": {
+            "type": "bullet",
+            "role_key": "ATT_CSE",
+            "index": 0
+        },
+        "ATT_CSE_BULLET_2": {
+            "type": "bullet",
+            "role_key": "ATT_CSE",
+            "index": 1
+        },
+        "ATT_CSE_BULLET_3": {
+            "type": "bullet",
+            "role_key": "ATT_CSE",
+            "index": 2
+        },
+        "ATT_CSE_BULLET_4": {
+            "type": "bullet",
+            "role_key": "ATT_CSE",
+            "index": 3
+        },
+        "ATT_CSE_BULLET_5": {
+            "type": "bullet",
+            "role_key": "ATT_CSE",
+            "index": 4
+        },
+        "ATT_B2B_BULLET_1": {
+            "type": "bullet",
+            "role_key": "ATT_B2B_SDR",
+            "index": 0
+        },
+        "ATT_B2B_BULLET_2": {
+            "type": "bullet",
+            "role_key": "ATT_B2B_SDR",
+            "index": 1
+        },
+        "ATT_B2B_BULLET_3": {
+            "type": "bullet",
+            "role_key": "ATT_B2B_SDR",
+            "index": 2
+        },
+        "ATT_B2B_BULLET_4": {
+            "type": "bullet",
+            "role_key": "ATT_B2B_SDR",
+            "index": 3
+        },
+        "ATT_B2B_BULLET_5": {
+            "type": "bullet",
+            "role_key": "ATT_B2B_SDR",
+            "index": 4
+        },
+        "SKILLS": {
+            "type": "block",
+            "source": "canonical_profile.skills",
+            "format": "grouped_semicolon_list"
+        }
+    },
+    "validation_rules": {
+        "allow_empty_bullets": false,
+        "missing_bullet_behavior": "remove_placeholder_line"
+    }
+}

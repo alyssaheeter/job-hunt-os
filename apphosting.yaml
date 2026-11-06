@@ -1,0 +1,6 @@
+buildConfig:
+  # Ensure the root build pulls in all workspaces correctly
+  buildCommand: npm run build
+runConfig:
+  # Explicitly set the run command for the Cloud Run service
+  runCommand: npm run start --workspace=@jhos/api

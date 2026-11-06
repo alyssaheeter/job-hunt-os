@@ -34,14 +34,15 @@ function createOutreachDraftForJob(jobId) {
     '<span style="display:none;color:transparent;font-size:1px">' + escapeHtml_(trackingToken) + "</span>";
   var recipient = job.contact_email || "";
   var draftId = job.outreach_draft_id || "";
-  var draftObj = null;
-  if (draftId) {
-    draftObj = GmailApp.getDraft(draftId).update(recipient || "", draft.subject || "", body, { htmlBody: htmlBody });
+  var draftObj = findSavedDraft_(draftId);
+  if (draftObj) {
+    draftObj = draftObj.update(recipient || "", draft.subject || "", body, { htmlBody: htmlBody });
   } else {
     draftObj = GmailApp.createDraft(recipient || "", draft.subject || "", body, { htmlBody: htmlBody });
   }
 
   updateTaskDraft_(taskId, draftObj.getId());
+  updateRowByMap(jobSheet, jobRow, { outreach_draft_id: draftObj.getId() });
   logEvent("INFO", "draft_outreach", jobId, taskId, { draftId: draftObj.getId() });
   return draftObj.getId();
 }
@@ -77,8 +78,9 @@ function createFollowupDraftForTask(taskId) {
 
   var draftId = task.draft_id;
   var updatedDraftId = "";
-  if (draftId) {
-    var updated = GmailApp.getDraft(draftId).update(recipient || "", draft.subject || "", body, { htmlBody: htmlBody });
+  var savedDraft = findSavedDraft_(draftId);
+  if (savedDraft) {
+    var updated = savedDraft.update(recipient || "", draft.subject || "", body, { htmlBody: htmlBody });
     updatedDraftId = updated.getId();
   } else {
     var created = GmailApp.createDraft(recipient || "", draft.subject || "", body, { htmlBody: htmlBody });
@@ -88,6 +90,20 @@ function createFollowupDraftForTask(taskId) {
   updateRowByMap(taskSheet, taskRow, { draft_id: updatedDraftId, updated_at: new Date() });
   logEvent("INFO", "draft_followup", job.job_id, task.task_id, { draftId: updatedDraftId });
   return updatedDraftId;
+}
+
+function findSavedDraft_(draftId) {
+  if (!draftId) return null;
+  try {
+    return GmailApp.getDraft(draftId);
+  } catch (err) {
+    // Confirm absence before replacing it; authorization/service errors still fail.
+    var drafts = GmailApp.getDrafts();
+    for (var i = 0; i < drafts.length; i++) {
+      if (drafts[i].getId() === draftId) throw err;
+    }
+    return null;
+  }
 }
 
 function updateTaskDraft_(taskId, draftId) {

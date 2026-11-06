@@ -1,0 +1,45 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Opportunity Entity Schema",
+    "type": "object",
+    "properties": {
+        "opportunity_id": {
+            "type": "string"
+        },
+        "dedupe_key": {
+            "type": "string"
+        },
+        "company": {
+            "type": "string"
+        },
+        "role": {
+            "type": "string"
+        },
+        "location": {
+            "type": "string"
+        },
+        "posting_url": {
+            "type": "string",
+            "format": "uri"
+        },
+        "status": {
+            "type": "string"
+        },
+        "match_score": {
+            "type": "number"
+        },
+        "matched_keywords": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
+    },
+    "required": [
+        "opportunity_id",
+        "dedupe_key",
+        "company",
+        "role",
+        "posting_url"
+    ]
+}

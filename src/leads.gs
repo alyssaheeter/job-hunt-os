@@ -37,10 +37,9 @@ function scanInboxForLeads() {
           var jobsSheet = getSheetOrThrow_("JOBS");
           var jobRow = findRowById_(jobsSheet, "job_id", jobId);
           if (jobRow !== -1) {
-            updateRowByMap(jobsSheet, jobRow, {
-              status: "lead",
-              lead_email_message_id: message.getId()
-            });
+            var updates = { lead_email_message_id: message.getId() };
+            if (ingestResult.created) updates.status = "lead";
+            updateRowByMap(jobsSheet, jobRow, updates);
           }
           appendRowByMap(leadsSheet, {
             lead_id: generateId_("lead"),

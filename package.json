@@ -1,19 +1,48 @@
 {
   "name": "job-hunt-os",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
-  "devDependencies": {
-    "@google/clasp": "^2.4.2"
-  },
+  "workspaces": [
+    "packages/shared",
+    "packages/prompts",
+    "packages/renderers/*",
+    "services/*"
+  ],
   "scripts": {
-    "build": "node scripts/build-sidebar.mjs",
-    "check": "npm run build && node --test test/*.test.mjs",
-    "prepush": "npm run build",
+    "build": "npm run build:sidebar && npm run build --workspaces --if-present",
+    "build:sidebar": "node scripts/build-sidebar.mjs",
+    "test": "node --test test/*.test.mjs && npm run test --workspaces --if-present",
+    "check": "npm run build && npm test",
+    "prepush": "npm run build:sidebar",
     "clasp:use:alyssa": "node scripts/clasp-use.mjs alyssa",
-    "clasp:use:mom": "node scripts/clasp-use.mjs mom",
     "push": "clasp push",
     "pull": "clasp pull",
-    "deploy": "clasp deploy --description \"[FILL-IN]\""
+    "predeploy:alyssa": "npm run build:sidebar",
+    "start": "npm start --workspace=@jhos/api",
+    "start:worker": "npm run start --workspace=services/worker",
+    "start:api": "npm run start --workspace=services/api",
+    "deploy:alyssa": "bash ./scripts/deploy-alyssa.sh"
+  },
+  "dependencies": {
+    "@google-cloud/firestore": "^7.11.0",
+    "@google-cloud/storage": "^7.15.0",
+    "@google-cloud/vertexai": "^1.9.0",
+    "cors": "^2.8.5",
+    "docxtemplater": "^3.55.7",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "firebase-admin": "^13.0.1",
+    "googleapis": "^144.0.0",
+    "pizzip": "^3.1.7",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.2",
+    "@google/clasp": "^2.4.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
   }
 }

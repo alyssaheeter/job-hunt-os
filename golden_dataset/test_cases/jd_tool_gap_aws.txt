@@ -1,0 +1,7 @@
+Cloud Solutions Architect
+Requirements:
+- Deep experience designing cloud enterprise architectures.
+- Experience with AWS (EC2, S3, RDS) is a strict must-have.
+- Python scripting
+Base: $180,000
+Remote

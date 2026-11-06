@@ -3,3 +3,15 @@ node_modules/
 .clasp.json
 clasp/.clasp.*.json
 !clasp/.clasp.*.json.example
+
+# Debug/temp output files
+*.txt
+!packages/prompts/*.md
+!docs/**
+!golden_dataset/**
+build-trace*.txt
+harness_output.txt
+tsc_output*.txt
+git_files.txt
+git_log.txt
+all_*_force.txt

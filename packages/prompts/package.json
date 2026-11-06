@@ -1,0 +1,13 @@
+{
+    "name": "@jhos/prompts",
+    "version": "1.1.0",
+    "type": "module",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc"
+    },
+    "dependencies": {
+        "@jhos/shared": "^1.0.0"
+    }
+}

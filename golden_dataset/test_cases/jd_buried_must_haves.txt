@@ -1,0 +1,4 @@
+Sales Engineer
+We are looking for someone to lead technical validation. You should be comfortable speaking to C-level executives and have a background in both cybersecurity and data engineering. The successful candidate will also be expected to have deep familiarity with Kubernetes and Docker, as our entire deployment stack relies on containerized microservices.
+
+Compensation: $160k base, $210k OTE.

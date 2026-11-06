@@ -1,0 +1,588 @@
+{
+    "schema_version": "resume_input_v3_template_dates_only",
+    "template_dates": {
+        "EDUCATION": {
+            "start": "January 2013",
+            "end": "December 2017"
+        },
+        "INDEPENDENT_CONSULTANCY": {
+            "start": "February 2024",
+            "end": "Present"
+        },
+        "AHEAD": {
+            "start": "February 2023",
+            "end": "January 2024"
+        },
+        "ATT_CSE": {
+            "start": "July 2018",
+            "end": "March 2023"
+        },
+        "ATT_B2B_SDR": {
+            "start": "January 2018",
+            "end": "July 2018"
+        }
+    },
+    "candidate": {
+        "name": "Alyssa Heeter",
+        "phone": "[FILL-IN]",
+        "email": "[FILL-IN]",
+        "location": "[FILL-IN]",
+        "linkedin": "[FILL-IN]"
+    },
+    "resume_style_rules": {
+        "fact_only": true,
+        "no_new_metrics": true,
+        "no_new_tools": true,
+        "no_new_titles": true,
+        "no_new_dates": true,
+        "bullet_format": "Action + Scope + Outcome",
+        "max_bullet_length_chars": 180,
+        "max_lines_per_bullet": 2,
+        "mirror_jd_language": true,
+        "output_requires_fact_citations": true,
+        "missing_fact_behavior": "Use [MISSING FACT] placeholder + log request"
+    },
+    "positioning": {
+        "summary_sentence_pool": [
+            {
+                "id": "SUM_001",
+                "text": "Strategic architect of technical and operational solutions who turns complex problems into clear, automated workflows and measurable business value.",
+                "tags": [
+                    "systems",
+                    "automation",
+                    "ops",
+                    "stakeholders"
+                ]
+            },
+            {
+                "id": "SUM_002",
+                "text": "Client-facing operator who translates technical concepts for diverse stakeholders and drives adoption through documentation, training, and change management.",
+                "tags": [
+                    "client-facing",
+                    "enablement",
+                    "comms",
+                    "delivery"
+                ]
+            },
+            {
+                "id": "SUM_003",
+                "text": "Experienced in consultative selling and cross-functional execution across high-velocity environments.",
+                "tags": [
+                    "sales",
+                    "cross-functional",
+                    "execution"
+                ]
+            }
+        ],
+        "avoid_claims": [
+            {
+                "text": "Senior Product Manager with 5+ years leading product development",
+                "reason": "Only include if explicitly supported by role history/facts."
+            }
+        ]
+    },
+    "education": [
+        {
+            "school": "Indiana University - Bloomington",
+            "program": "Kelley School of Business, Supply Chain Management",
+            "start": "January 2013",
+            "end": "December 2017",
+            "honors": [
+                "Presidential Scholar Distinction"
+            ]
+        }
+    ],
+    "skills": {
+        "groups": {
+            "Sales_Account": [
+                "Consultative Selling",
+                "Client Relationship Management",
+                "Account Management",
+                "Pipeline Management",
+                "New Business Development",
+                "Upsell/Cross-sell",
+                "Negotiation",
+                "Closing Deals",
+                "Executive Business Reviews (EBRs)",
+                "C-level engagement"
+            ],
+            "Delivery_Ops": [
+                "Technical Project / Program Management",
+                "Cross-functional delivery",
+                "Workflow design",
+                "Process optimization",
+                "Systems documentation",
+                "Training / enablement"
+            ],
+            "Automation_Tech": [
+                "Automation & orchestration",
+                "Cloud / infrastructure strategy",
+                "AI enablement (implementation-focused)",
+                "Tool integrations"
+            ]
+        },
+        "template_format": "grouped_semicolon_list",
+        "max_items": 24
+    },
+    "facts_repo": [
+        {
+            "fact_id": "CONSULT_001",
+            "role_key": "INDEPENDENT_CONSULTANCY",
+            "text": "Launched and managed an independent consultancy delivering AI and automation solutions to small and mid-sized law firms.",
+            "tags": [
+                "consulting",
+                "ai",
+                "automation",
+                "law-firm-ops",
+                "delivery"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": true,
+                "outreach": true
+            }
+        },
+        {
+            "fact_id": "CONSULT_002",
+            "role_key": "INDEPENDENT_CONSULTANCY",
+            "text": "Designed and deployed Clio-based workflows and automated document/case tracking systems resulting in a 40% reduction in manual work and improved productivity.",
+            "tags": [
+                "clio",
+                "workflow",
+                "automation",
+                "legal-ops",
+                "impact-metric"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": true,
+                "outreach": true
+            }
+        },
+        {
+            "fact_id": "CONSULT_003",
+            "role_key": "INDEPENDENT_CONSULTANCY",
+            "text": "Analyzed and mapped complex client workflows to design and build customized AI and automation systems that enhanced performance and reduced operational errors.",
+            "tags": [
+                "process-mapping",
+                "automation",
+                "requirements",
+                "ops",
+                "quality"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": true,
+                "outreach": true
+            }
+        },
+        {
+            "fact_id": "CONSULT_004",
+            "role_key": "INDEPENDENT_CONSULTANCY",
+            "text": "Managed the full end-to-end sales pipeline for consulting services; prospected and closed multiple SMB engagements within the legal sector.",
+            "tags": [
+                "sales",
+                "pipeline",
+                "smb",
+                "consulting",
+                "closing"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": true,
+                "outreach": true
+            }
+        },
+        {
+            "fact_id": "CONSULT_005",
+            "role_key": "INDEPENDENT_CONSULTANCY",
+            "text": "Provided training sessions for law firm staff on new automated systems to ensure smooth transitions and effective utilization.",
+            "tags": [
+                "enablement",
+                "training",
+                "change-management",
+                "adoption"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": true,
+                "outreach": true
+            }
+        },
+        {
+            "fact_id": "CONSULT_006",
+            "role_key": "INDEPENDENT_CONSULTANCY",
+            "text": "Supported real estate transaction operations: obtained title commitments/exams; prepared title company documents (e.g., ALTA statements); drafted affidavits for title clearance; coordinated HOA/Condo resale disclosure packages and paid assessment letters.",
+            "tags": [
+                "legal-ops",
+                "real-estate",
+                "documentation",
+                "coordination",
+                "third-parties"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": true,
+                "outreach": false
+            }
+        },
+        {
+            "fact_id": "AHEAD_001",
+            "role_key": "AHEAD",
+            "text": "Secured primary vendor position for a top-tier airline client, resulting in a $10M contract.",
+            "tags": [
+                "enterprise",
+                "deal",
+                "sales",
+                "vendor-selection",
+                "airline",
+                "impact-metric"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": true,
+                "outreach": true
+            }
+        },
+        {
+            "fact_id": "AHEAD_002",
+            "role_key": "AHEAD",
+            "text": "Spearheaded data center modernization and server optimization projects improving infrastructure reliability by 30% through design optimizations.",
+            "tags": [
+                "data-center",
+                "infrastructure",
+                "modernization",
+                "reliability",
+                "impact-metric"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": true,
+                "outreach": true
+            }
+        },
+        {
+            "fact_id": "AHEAD_003",
+            "role_key": "AHEAD",
+            "text": "Led design and deployment of server configurations optimized for AI applications, enhancing performance by 40% for a major airline.",
+            "tags": [
+                "ai",
+                "infrastructure",
+                "performance",
+                "server",
+                "deployment",
+                "impact-metric"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": true,
+                "outreach": true
+            }
+        },
+        {
+            "fact_id": "AHEAD_004",
+            "role_key": "AHEAD",
+            "text": "Managed a team of 20+ engineers in the rollout of a cloud services suite; delivered on schedule and improved reliability by 30%.",
+            "tags": [
+                "leadership",
+                "program-delivery",
+                "cloud",
+                "team-size",
+                "reliability",
+                "impact-metric"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": true,
+                "outreach": true
+            }
+        },
+        {
+            "fact_id": "AHEAD_005",
+            "role_key": "AHEAD",
+            "text": "Led technology engagements for Fortune 500 clients, translating complex AI/Cloud/Data Center solutions into business cases and infrastructure strategies.",
+            "tags": [
+                "f500",
+                "stakeholder-translation",
+                "business-case",
+                "strategy",
+                "client-facing"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": true,
+                "outreach": true
+            }
+        },
+        {
+            "fact_id": "ATT_001",
+            "role_key": "ATT_CSE",
+            "text": "Ranked as a Top 10 Sales Associate in the Central Market (2021).",
+            "tags": [
+                "sales",
+                "ranking",
+                "performance"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": true,
+                "outreach": true
+            }
+        },
+        {
+            "fact_id": "ATT_002",
+            "role_key": "ATT_CSE",
+            "text": "Managed and grew 200+ business accounts.",
+            "tags": [
+                "account-management",
+                "portfolio",
+                "b2b"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": true,
+                "outreach": true
+            }
+        },
+        {
+            "fact_id": "ATT_003",
+            "role_key": "ATT_CSE",
+            "text": "Secured multi-year enterprise contracts exceeding $2M.",
+            "tags": [
+                "enterprise",
+                "contracts",
+                "deal-size",
+                "sales",
+                "impact-metric"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": true,
+                "outreach": true
+            }
+        },
+        {
+            "fact_id": "ATT_004",
+            "role_key": "ATT_CSE",
+            "text": "Increased upsell revenue by 25% and customer retention by 20% with tailored strategic solutions.",
+            "tags": [
+                "upsell",
+                "retention",
+                "growth",
+                "account-strategy",
+                "impact-metric"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": true,
+                "outreach": true
+            }
+        },
+        {
+            "fact_id": "ATT_005",
+            "role_key": "ATT_CSE",
+            "text": "Directed design and implementation of tailored network solutions resulting in a 95% satisfaction rate.",
+            "tags": [
+                "solution-design",
+                "implementation",
+                "networks",
+                "csat",
+                "impact-metric"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": true,
+                "outreach": true
+            }
+        },
+        {
+            "fact_id": "ATT_006",
+            "role_key": "ATT_CSE",
+            "text": "Maintained and grew the sales pipeline and improved deal closures by 30%.",
+            "tags": [
+                "pipeline",
+                "forecasting",
+                "closing",
+                "impact-metric"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": true,
+                "outreach": true
+            }
+        },
+        {
+            "fact_id": "ATT_007",
+            "role_key": "ATT_CSE",
+            "text": "Exceeded sales targets by over 100% YTD in 2018 and 2019, driving $5M in revenue growth.",
+            "tags": [
+                "quota",
+                "revenue",
+                "performance",
+                "impact-metric"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": true,
+                "outreach": true
+            }
+        },
+        {
+            "fact_id": "ATT_008",
+            "role_key": "ATT_CSE",
+            "text": "Initiated and led a training program for new hires that improved team performance and sales metrics by 25% within the first year.",
+            "tags": [
+                "enablement",
+                "training",
+                "leadership",
+                "impact-metric"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": true,
+                "outreach": true
+            }
+        },
+        {
+            "fact_id": "ATT_SDR_001",
+            "role_key": "ATT_B2B_SDR",
+            "text": "Specialized in consultative selling and developing customized network solutions; completed a comprehensive training program in telecom products, services, and B2B sales methodologies.",
+            "tags": [
+                "sdr",
+                "training",
+                "consultative-selling",
+                "network-solutions"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": false,
+                "outreach": false
+            }
+        },
+        {
+            "fact_id": "ATT_CAP_001",
+            "role_key": "ATT_CSE",
+            "text": "Engineered and sold networking/connectivity solutions and guided customers through solution selection and deployment planning (customer-specific).",
+            "tags": [
+                "solution-architecture",
+                "networks",
+                "deployment",
+                "customer-facing"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": true,
+                "outreach": false
+            }
+        },
+        {
+            "fact_id": "ATT_CAP_002",
+            "role_key": "ATT_CSE",
+            "text": "Positioned collaboration/communications and cybersecurity offerings as integrated solutions based on customer requirements (customer-specific).",
+            "tags": [
+                "security",
+                "ucaas",
+                "requirements",
+                "solution-selling"
+            ],
+            "allowed": {
+                "resume": true,
+                "cover_letter": true,
+                "outreach": false
+            }
+        }
+    ],
+    "roles": [
+        {
+            "role_key": "INDEPENDENT_CONSULTANCY",
+            "company": "Independent Consultancy",
+            "title": "AI/Automation Implementation Consultant",
+            "location": "Chicago, IL",
+            "start": "February 2024",
+            "end": "Present",
+            "bullet_slots": 5,
+            "allowed_fact_ids": [
+                "CONSULT_001",
+                "CONSULT_002",
+                "CONSULT_003",
+                "CONSULT_004",
+                "CONSULT_005",
+                "CONSULT_006"
+            ]
+        },
+        {
+            "role_key": "AHEAD",
+            "company": "AHEAD",
+            "title": "Client Solution Architect",
+            "location": "Chicago, IL",
+            "start": "February 2023",
+            "end": "January 2024",
+            "bullet_slots": 5,
+            "allowed_fact_ids": [
+                "AHEAD_001",
+                "AHEAD_002",
+                "AHEAD_003",
+                "AHEAD_004",
+                "AHEAD_005"
+            ]
+        },
+        {
+            "role_key": "ATT_CSE",
+            "company": "AT&T",
+            "title": "Client Solutions Executive",
+            "location": "Chicago, IL",
+            "start": "July 2018",
+            "end": "March 2023",
+            "bullet_slots": 5,
+            "allowed_fact_ids": [
+                "ATT_001",
+                "ATT_002",
+                "ATT_003",
+                "ATT_004",
+                "ATT_005",
+                "ATT_006",
+                "ATT_007",
+                "ATT_008",
+                "ATT_CAP_001",
+                "ATT_CAP_002"
+            ]
+        },
+        {
+            "role_key": "ATT_B2B_SDR",
+            "company": "AT&T",
+            "title": "B2B Sales Development Representative",
+            "location": "Dallas, TX",
+            "start": "January 2018",
+            "end": "July 2018",
+            "bullet_slots": 5,
+            "allowed_fact_ids": [
+                "ATT_SDR_001"
+            ]
+        }
+    ],
+    "template_placeholder_map": {
+        "PRO_SUMMARY": {
+            "build_from": "positioning.summary_sentence_pool",
+            "max_sentences": 3,
+            "must_cover_tags_any_of": [
+                "automation",
+                "client-facing",
+                "delivery",
+                "sales"
+            ]
+        },
+        "ROLE_BULLETS": {
+            "per_role": true,
+            "selection_method": "rank_by_tag_overlap_then_rewrite",
+            "tie_breakers": [
+                "impact_metric_first",
+                "client_facing_first",
+                "leadership_first"
+            ]
+        },
+        "SKILLS": {
+            "build_from": "skills.groups",
+            "max_items": 24
+        }
+    }
+}

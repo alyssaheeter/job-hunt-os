@@ -1,0 +1,33 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "SETTINGS Schema",
+    "type": "object",
+    "patternProperties": {
+        "^[A-Z_]+$": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "TEMPLATES_FOLDER_ID",
+        "RESUME_TEMPLATE_ID",
+        "COVER_LETTER_TEMPLATE_ID",
+        "OUTPUT_FOLDER_ID",
+        "FACTS_FOLDER_ID",
+        "GMAIL_LABEL_PREFIX",
+        "ENABLE_AUTO_SEND",
+        "FOLLOW_UP_DAYS_1",
+        "FOLLOW_UP_DAYS_2",
+        "FOLLOW_UP_DAYS_3",
+        "SIGNATURE_BLOCK",
+        "DEFAULT_EMAIL_TONE",
+        "AI_ENABLED",
+        "AI_PROVIDER",
+        "AI_MODEL",
+        "FIT_SCORE_ENABLED",
+        "FIT_SCORE_THRESHOLD",
+        "MAX_OUTPUT_TOKENS",
+        "TEMPERATURE",
+        "INBOX_SCAN_QUERY",
+        "INBOX_SCAN_LOOKBACK_DAYS"
+    ]
+}
