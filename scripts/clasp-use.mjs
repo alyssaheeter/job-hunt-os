@@ -1,8 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+const target = process.argv[2] || 'alyssa';
+if (target !== 'alyssa') {
+  console.error('Invalid target. This repository supports only alyssa.');
+  process.exit(1);
+}
+
 const repoRoot = process.cwd();
-const source = path.join(repoRoot, '.clasp.json.example');
+const source = path.join(repoRoot, '.clasp-alyssa.json');
 const dest = path.join(repoRoot, '.clasp.json');
 
 if (!fs.existsSync(source)) {

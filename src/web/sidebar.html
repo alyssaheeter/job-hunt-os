@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style><?!= include_('web/sidebar-css'); ?></style>
+  </head>
+  <body>
+    <div class="app">
+      <header class="header">
+        <div>
+          <h1>JobOS</h1>
+          <p class="muted">URL → ingest → tasks → drafts → reconciliation</p>
+        </div>
+        <button id="refreshBtn" class="ghost">Refresh</button>
+      </header>
+
+      <section class="card" id="settingsCard">
+        <div class="card-header">
+          <h2>Settings Health</h2>
+          <span id="settingsStatus" class="pill">Checking…</span>
+        </div>
+        <ul id="settingsMissing" class="list muted"></ul>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Ingest Job URL</h2>
+        </div>
+        <form id="ingestForm" class="stack">
+          <label>
+            Job URL
+            <input id="jobUrl" type="url" required placeholder="https://jobs.example.com/role" />
+          </label>
+          <label>
+            Optional JD paste (if the site blocks fetch)
+            <textarea id="jobText" rows="4" placeholder="Paste job description if needed"></textarea>
+          </label>
+          <button type="submit">Ingest</button>
+          <p id="ingestResult" class="muted"></p>
+        </form>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Jobs</h2>
+        </div>
+        <div class="filters">
+          <input id="jobSearch" type="search" placeholder="Search company or role" />
+          <select id="jobStatus">
+            <option value="">All statuses</option>
+            <option value="new">New</option>
+            <option value="lead">Lead</option>
+            <option value="applied">Applied</option>
+            <option value="archived">Archived</option>
+          </select>
+        </div>
+        <div id="jobsList" class="list"></div>
+      </section>
+
+      <section class="card hidden" id="jobDetailCard">
+        <div class="card-header">
+          <h2>Job Detail</h2>
+          <button id="closeDetailBtn" class="ghost" type="button">Close</button>
+        </div>
+        <form id="jobDetailForm" class="stack">
+          <input id="detailJobId" type="hidden" />
+          <label>Company<input id="detailCompany" /></label>
+          <label>Role<input id="detailRole" /></label>
+          <label>Status<input id="detailStatus" /></label>
+          <label>Contact email<input id="detailContact" type="email" /></label>
+          <label>Job description<textarea id="detailDescription" rows="6"></textarea></label>
+          <div class="actions">
+            <button type="submit">Save</button>
+            <button id="artifactsBtn" class="secondary" type="button">Create artifacts</button>
+            <button id="outreachBtn" class="secondary" type="button">Draft outreach</button>
+            <button id="archiveBtn" class="danger" type="button">Archive</button>
+          </div>
+          <p id="detailResult" class="muted" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Dashboard</h2>
+        </div>
+        <div class="kpis" id="kpiGrid"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Priority Tasks</h2>
+        </div>
+        <div id="tasksList" class="list"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Needs Review</h2>
+        </div>
+        <div id="reviewList" class="list"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Recent Logs</h2>
+        </div>
+        <div id="logsList" class="list muted"></div>
+      </section>
+    </div>
+
+    <script><?!= include_('web/sidebar-js'); ?></script>
+  </body>
+</html>

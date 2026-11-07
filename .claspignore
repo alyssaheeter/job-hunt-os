@@ -1,0 +1,9 @@
+# Ignore everything, then include only Apps Script-compatible source files.
+**/**
+!appsscript.json
+!**/*.gs
+!**/*.html
+
+# Browser source is kept in its native format and compiled to HTML includes.
+src/web/sidebar.js
+web/sidebar.js

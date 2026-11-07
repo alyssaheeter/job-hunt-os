@@ -13,24 +13,19 @@ Job Hunt OS is a Google Apps Script project bound to a Google Sheet “Dashboard
 ---
 
 ## Repository Structure
-```
-/
-  README.md
-  LICENSE
-  .gitignore
-  package.json
-  .clasp.json.example       # Example clasp configuration
-  apps-script/              # Source code for the backend
-    package.json            
-    src/                    # Clasp root dir where .gs files and HTML/CSS live
-    tests/
-  data/
-    facts/                  # Example fact structures
-  docs/                     # Comprehensive documentation guides (00 to 07)
-  prompts/                  # Template prompts for the AI
-  schemas/                  # JSON schema definitions for Sheet tabs
-  scripts/                  # Helper scripts
-  .agent/                   # Antigravity rules and workflows for automation
+```text
+src/                     # Complete Apps Script backend and sidebar
+  web/                   # Browser JS/CSS and generated HTML includes
+packages/shared/         # Shared schemas and scoring
+packages/prompts/        # AI prompt modules
+packages/renderers/      # Document rendering
+packages/job-hub/        # Separate Next.js web app
+services/                # API and worker workspaces
+data/facts/              # Fact source structures
+docs/                    # Setup and architecture documentation
+scripts/                 # Build and deployment helpers
+test/                    # Local Apps Script regression tests
+.clasp-alyssa.json        # Alyssa deployment configuration (rootDir: src)
 ```
 
 ---
@@ -40,7 +35,7 @@ Job Hunt OS is a Google Apps Script project bound to a Google Sheet “Dashboard
 Please refer to the full setup guide in `/docs/01_SETUP.md` for detailed instructions.
 
 1. **Dashboard Google Sheet**: Create an SSOT Google Sheet.
-2. **Apps Script Project**: Create a bound Apps Script project and set up your `.clasp.json`.
+2. **Apps Script Project**: Create a bound Apps Script project and run `npm run clasp:use:alyssa` to copy `.clasp-alyssa.json` to the ignored `.clasp.json`. Confirm the script ID matches your bound project. Existing local configuration is preserved unless `FORCE=1` is set.
 3. **Drive folders**: Create a Templates folder, Output folder, and Facts folder (populate with `facts_` files).
 4. **Deploy**: Run `npm run push` to upload code, then run the first-time setup menu item in the spreadsheet.
 
@@ -56,6 +51,34 @@ The **JOBS** sheet supports **checkbox-driven actions** for seamless operation:
 - `DO_DRAFT_FOLLOWUP` → Creates a follow-up email draft.
 
 Each action is **idempotent**, meaning re-checking a box won't repeat work if the status is already `DONE`. All actions auto-clear upon processing.
+
+---
+
+## Sidebar Usage
+
+Open **JobOS → Open Sidebar** for URL intake (with optional pasted job description),
+dashboard KPIs, priority tasks, recent logs, and searchable job details. The sidebar
+can generate artifacts, create outreach drafts, and archive jobs.
+
+`src/web/sidebar.js` and `sidebar.css` are the source files. `npm run build:sidebar`
+generates `sidebar-js.html` and `sidebar-css.html` for Apps Script. Both `npm run push`
+and `npm run deploy:alyssa` build these assets before uploading. `.claspignore`
+excludes browser JavaScript from server-side Apps Script.
+
+If a site blocks URL fetching, paste its job description. Confirm required SETTINGS
+and the `AI_API_KEY` Script Property before using AI extraction. Fetch requests use
+Apps Script's execution limit; no per-request timeout is claimed.
+
+The complete Apps Script backend is retained under `src/` because the sidebar and
+spreadsheet actions depend on it. The API/worker workspaces and separate Next.js app
+remain available alongside it.
+
+Sidebar responses serialize spreadsheet dates before returning them to the browser.
+Repeated lead emails preserve existing job status, and sent/deleted drafts can be
+replaced. Sent-mail reconciliation records message IDs in `INTERACTIONS` and uses
+the message's send date for follow-up scheduling. Reauthorize the Apps Script after
+deploying if prompted: `userinfo.email` identifies the executing account so inbound
+quoted replies are excluded alongside drafts.
 
 ---
 
@@ -76,8 +99,15 @@ Dive deeper into the system's capabilities through our detailed documentation su
 
 ## Technical Maintenance
 
-Ensure you run `npm install` to grab all dependencies. Use the provided npm scripts:
-- `npm run deploy`: Deploy the Apps Script project via clasp.
-- `npm run docs`: Rebuild docs or verify via agent.
-- `npm run verify`: Run JSON schema and configuration validation.
-- `npm run test`: Validate types and run unit tests.
+Install dependencies with `npm ci`, then use:
+
+- `npm run check`: build sidebar assets and TypeScript workspaces, then run tests.
+- `npm run build:sidebar`: regenerate Apps Script includes only.
+- `npm test`: run Apps Script regression tests and workspace tests, where present.
+- `npm run push`: build sidebar assets and upload to the configured Apps Script project.
+- `npm run deploy:alyssa`: build sidebar assets and deploy using Alyssa's configuration (requires Bash).
+- `npm run start:api` / `npm run start:worker`: start the compiled services.
+
+`packages/job-hub` is a separate Next.js application with its own package manifest;
+it is not included in the root workspace build. Local tests use Apps Script mocks;
+spreadsheet, Gmail, and sidebar behavior still require an authenticated smoke test.

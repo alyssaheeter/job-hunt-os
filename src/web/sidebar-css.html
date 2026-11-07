@@ -74,11 +74,50 @@ label {
 }
 
 input,
-textarea {
+textarea,
+select {
   padding: 8px;
   border-radius: 8px;
   border: 1px solid var(--border);
   font-size: 12px;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.secondary {
+  background: #334155;
+}
+
+.danger {
+  background: #b91c1c;
+}
+
+.hidden {
+  display: none;
+}
+
+.job-button {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  color: var(--text);
+  padding: 6px 0;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.65;
 }
 
 button {

@@ -10,8 +10,15 @@
     "services/*"
   ],
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
-    "test": "npm run test --workspaces --if-present",
+    "build": "npm run build:sidebar && npm run build --workspaces --if-present",
+    "build:sidebar": "node scripts/build-sidebar.mjs",
+    "test": "node --test test/*.test.mjs && npm run test --workspaces --if-present",
+    "check": "npm run build && npm test",
+    "prepush": "npm run build:sidebar",
+    "clasp:use:alyssa": "node scripts/clasp-use.mjs alyssa",
+    "push": "clasp push",
+    "pull": "clasp pull",
+    "predeploy:alyssa": "npm run build:sidebar",
     "start": "npm start --workspace=@jhos/api",
     "start:worker": "npm run start --workspace=services/worker",
     "start:api": "npm run start --workspace=services/api",
